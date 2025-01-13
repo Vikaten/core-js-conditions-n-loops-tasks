@@ -144,108 +144,43 @@ function convertToRomanNumerals(num) {
  *  '10,5'    => 'one zero point five'
  *  '1950.2'  => 'one nine five zero point two'
  */
-function convertNumberToString() {
-  // numberStr;
-  //   let numberStrMew = numberStr;
-  //   const units = [
-  //     '',
-  //     'one',
-  //     'two',
-  //     'three',
-  //     'four',
-  //     'five',
-  //     'six',
-  //     'seven',
-  //     'eight',
-  //     'nine',
-  //     'ten',
-  //     'eleven',
-  //     'twelve',
-  //     'thirteen',
-  //     'fourteen',
-  //     'fifteen',
-  //     'sixteen',
-  //     'seventeen',
-  //     'eighteen',
-  //     'nineteen',
-  //   ];
+function convertNumberToString(numberStr) {
+  const digitWords = {
+    0: 'zero',
+    1: 'one',
+    2: 'two',
+    3: 'three',
+    4: 'four',
+    5: 'five',
+    6: 'six',
+    7: 'seven',
+    8: 'eight',
+    9: 'nine',
+    '-': 'minus',
+    '.': 'point',
+    ',': 'point',
+  };
 
-  //   const tens = [
-  //     '',
-  //     '',
-  //     'twenty',
-  //     'thirty',
-  //     'forty',
-  //     'fifty',
-  //     'sixty',
-  //     'seventy',
-  //     'eighty',
-  //     'ninety',
-  //   ];
+  let result = '';
+  let i = 0;
 
-  //   const multiplier = ['', 'thousand', 'million', 'billion'];
+  while (i < numberStr.length) {
+    const char = numberStr[i];
+    if (digitWords[char] !== undefined) {
+      result += `${digitWords[char]} `;
+    }
+    i += 1;
+  }
 
-  //   let final = '';
-  //   let isNegative = false;
+  if (result.length > 0) {
+    let finalResult = '';
+    for (let j = 0; j < result.length - 1; j += 1) {
+      finalResult += result[j];
+    }
+    return finalResult;
+  }
 
-  //   // Обработка знака минус
-  //   if (numberStrMew[0] === '-') {
-  //     isNegative = true;
-  //     numberStrMew = numberStrMew.slice(1); // Убираем минус для дальнейшей обработки
-  //   }
-
-  //   // Обработка десятичной части
-  //   let decimalPart = '';
-  //   if (numberStrMew.includes('.') || numberStrMew.includes(',')) {
-  //     const pointIndex =
-  //       numberStrMew.indexOf('.') !== -1
-  //         ? numberStrMew.indexOf('.')
-  //         : numberStrMew.indexOf(',');
-  //     decimalPart = numberStrMew.slice(pointIndex + 1);
-  //     numberStrMew = numberStrMew.slice(0, pointIndex);
-  //   }
-
-  //   // Преобразование целой части числа
-  //   let number = parseInt(numberStrMew, 10);
-  //   let group = 0;
-
-  //   while (number > 0) {
-  //     if (number % 1000 !== 0) {
-  //       const value = number % 1000;
-  //       let res = '';
-
-  //       if (value >= 100) {
-  //         res += `${units[Math.floor(value / 100)]} hundred `;
-  //       }
-  //       if (value % 100 >= 20) {
-  //         res += `${tens[Math.floor((value % 100) / 10)]} `;
-  //         res += `${units[value % 10]} `;
-  //       } else if (value % 100 > 0) {
-  //         res += `${units[value % 100]} `;
-  //       }
-
-  //       res += `${multiplier[group]} `;
-  //       final = res + final; // Добавляем к началу строки
-  //     }
-  //     number = Math.floor(number / 1000);
-  //     group += 1;
-  //   }
-
-  //   // Обработка десятичной части
-  //   if (decimalPart) {
-  //     final += 'point ';
-  //     for (let i = 0; i < decimalPart.length; i += 1) {
-  //       final += `${units[parseInt(decimalPart[i], 10)]} `;
-  //     }
-  //   }
-
-  //   // Добавляем знак минус, если необходимо
-  //   if (isNegative) {
-  //     final = `minus ${final}`;
-  //   }
-
-  //   return final.trim();
-  throw new Error('Not implemented');
+  return result;
 }
 
 /**
@@ -373,8 +308,49 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = [];
+  }
+
+  let top = 0;
+  let bottom = size - 1;
+  let left = 0;
+  let right = size - 1;
+  let num = 0;
+
+  while (top <= bottom && left <= right) {
+    for (let i = left; i <= right; i += 1) {
+      num += 1;
+      matrix[top][i] = num;
+    }
+    top += 1;
+
+    for (let i = top; i <= bottom; i += 1) {
+      num += 1;
+      matrix[i][right] = num;
+    }
+    right -= 1;
+
+    if (top <= bottom) {
+      for (let i = right; i >= left; i -= 1) {
+        num += 1;
+        matrix[bottom][i] = num;
+      }
+      bottom -= 1;
+    }
+
+    if (left <= right) {
+      for (let i = bottom; i >= top; i -= 1) {
+        num += 1;
+        matrix[i][left] = num;
+      }
+      left += 1;
+    }
+  }
+
+  return matrix;
 }
 
 /**
@@ -463,26 +439,47 @@ function sortByAsc(arr) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleMultipleTimes(str, iterations) {
-  const iterationsNew = iterations % 2 === 0 ? 0 : 1;
-  if (iterationsNew === 0) {
-    return str;
-  }
-  let res = '';
-  for (let i = 0; i < str.length; i += 2) {
-    res += str[i];
-  }
-  for (let i = 1; i < str.length; i += 2) {
-    res += str[i];
-  }
-  return res;
-}
 
 function shuffleChar(str, iterations) {
-  let result = str;
-  for (let i = 0; i < iterations; i += 1) {
-    result = shuffleMultipleTimes(result, 1);
+  let length = 0;
+  let n = 0;
+  let iterationsNew = iterations;
+
+  while (str[n] !== undefined) {
+    length += 1;
+    n += 1;
   }
+
+  iterationsNew %= length;
+
+  let evenChars = '';
+  let oddChars = '';
+
+  for (let i = 0; i < length; i += 1) {
+    if (i % 2 === 0) {
+      evenChars += str[i];
+    } else {
+      oddChars += str[i];
+    }
+  }
+
+  let result = evenChars + oddChars;
+
+  for (let i = 1; i < iterationsNew; i += 1) {
+    evenChars = '';
+    oddChars = '';
+
+    for (let j = 0; j < result.length; j += 1) {
+      if (j % 2 === 0) {
+        evenChars += result[j];
+      } else {
+        oddChars += result[j];
+      }
+    }
+
+    result = evenChars + oddChars;
+  }
+
   return result;
 }
 
